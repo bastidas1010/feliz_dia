@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Mensajes Especiales</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fbe9e7 0%, #f8bbd9 50%, #e1bee7 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animación de confeti de fondo */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, #ff6b6b 2px, transparent 2px),
+                radial-gradient(circle at 80% 50%, #4ecdc4 2px, transparent 2px),
+                radial-gradient(circle at 40% 20%, #45b7d1 2px, transparent 2px),
+                radial-gradient(circle at 60% 80%, #f9ca24 2px, transparent 2px),
+                radial-gradient(circle at 90% 30%, #6c5ce7 2px, transparent 2px),
+                radial-gradient(circle at 10% 70%, #a29bfe 2px, transparent 2px);
+            background-size: 100px 100px, 120px 120px, 90px 90px, 110px 110px, 80px 80px, 130px 130px;
+            animation: confetti-fall 20s linear infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 192, 203, 0.3);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #e91e63;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: bounce 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0px); }
+            to { transform: translateY(-10px); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .cake-container {
+            margin: 40px 0;
+            padding: 30px;
+            background: linear-gradient(145deg, #fff, #f0f0f0);
+            border-radius: 20px;
+            box-shadow: inset 5px 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .generate-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .generate-btn:hover::before {
+            left: 100%;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        .generate-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .generate-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ff6b6b;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 15px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .cake-display {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .cake-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .cake-image:hover {
+            transform: scale(1.05);
+        }
+
+        .success-message {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .error-message {
+            background: linear-gradient(45deg, #f44336, #ef5350);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(45deg, #9c27b0, #ba68c8);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 6px 15px rgba(156, 39, 176, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(156, 39, 176, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .birthday-message {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #e91e63;
+        }
+
+        .birthday-message h3 {
+            color: #e91e63;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .birthday-message p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Efectos de partículas */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .generate-btn {
+                padding: 15px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Mensajes Especiales</h1>
+        <p class="subtitle">Crea recuerdos mágicos con pasteles únicos hechos especialmente para ti</p>
+        
+        <div class="birthday-message">
+            <h3>🎂 ¡Feliz Cumpleaños!</h3>
+            <p>Cada pastel es una obra de arte generada con Python, llena de colores vibrantes, velas brillantes y toda la magia que mereces en tu día especial.</p>
+        </div>
+
+        <div class="cake-container">
+            <button onclick="generarPastel()" id="generateBtn" class="generate-btn">
+                🎂 Hornear Mi Pastel Mágico
+            </button>
+            
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Preparando tu pastel especial... 🎨</div>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                ¡Tu pastel está listo! 🎉 ¡Que tengas un día increíble!
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Ups, algo salió mal. Inténtalo de nuevo en un momento.
+            </div>
+            
+            <div class="cake-display" id="cakeDisplay">
+                <div id="imagenPastel"></div>
+            </div>
+        </div>
+
+        <a href="/" class="back-btn">← Volver al Inicio</a>
+    </div>
+
+    <script>
+        function generarPastel() {
+            const btn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+            const cakeDisplay = document.getElementById('cakeDisplay');
+            
+            // Resetear estados
+            btn.disabled = true;
+            btn.textContent = 'Generando...';
+            loading.style.display = 'block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            cakeDisplay.style.display = 'none';
+            
+            // Crear efecto de partículas
+            createParticles();
+            
+            fetch('/generate_cake')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const contenedor = document.getElementById('imagenPastel');
+                        contenedor.innerHTML = `
+                            <img src="${data.image_url}" alt="Pastel de Cumpleaños" class="cake-image">
+                            <p style="margin-top: 15px; color: #666; font-style: italic;">
+                                ${data.message}
+                            </p>
+                        `;
+                        
+                        successMsg.style.display = 'block';
+                        cakeDisplay.style.display = 'block';
+                        
+                        // Efecto de confeti
+                        launchConfetti();
+                        
+                    } else {
+                        errorMsg.textContent = data.error || 'Error desconocido';
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMsg.textContent = 'Error de conexión. Verifica tu internet.';
+                    errorMsg.style.display = 'block';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = '🎂 Crear Otro Pastel';
+                    loading.style.display = 'none';
+                });
+        }
+        
+        function createParticles() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a29bfe'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = Math.random() * window.innerHeight + 'px';
+                    particle.style.width = (Math.random() * 10 + 5) + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.borderRadius = '50%';
+                    particle.style.animation = 'float 3s ease-out forwards';
+                    
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+        
+        function launchConfetti() {
+            const duration = 3000;
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a29bfe'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.width = (Math.random() * 8 + 4) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                    confetti.style.pointerEvents = 'none';
+                    confetti.style.zIndex = '1000';
+                    confetti.style.animation = `confetti-fall 3s linear forwards`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 60);
+            }
+        }
+        
+        // Agregar estilos CSS dinámicamente para las animaciones
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0% { 
+                    transform: translateY(0px) rotate(0deg);
+                    opacity: 1;
+                }
+                100% { 
+                    transform: translateY(-100px) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌻 Puzzle Personalizable para Dedicar 💛🧩</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0, #fd79a8);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #e17055;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #636e72;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            background: linear-gradient(45deg, #fd79a8, #fdcb6e);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.3);
+        }
+
+        .file-input-wrapper:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4);
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        select {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            background: white;
+            color: #2d3436;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        select:focus {
+            border-color: #fd79a8;
+            box-shadow: 0 0 0 3px rgba(253, 121, 168, 0.2);
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+        }
+
+        .puzzle-area {
+            margin-top: 30px;
+            position: relative;
+        }
+
+        #puzzleCanvas {
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(116, 185, 255, 0.1);
+            border-radius: 15px;
+            border: 2px solid rgba(116, 185, 255, 0.3);
+        }
+
+        .timer, .moves {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #e17055, #fd79a8);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(225, 112, 85, 0.3);
+        }
+
+        .selected-piece {
+            box-shadow: 0 0 0 4px #74b9ff !important;
+        }
+
+        .victory-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .victory-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .victory-title {
+            font-size: 2rem;
+            color: #00b894;
+            margin-bottom: 20px;
+        }
+
+        .back-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+
+        .fireworks {
+            position: fixed;
+            font-size: 2rem;
+            animation: firework 2s infinite;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .firework-burst {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: burst 1.5s ease-out forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .firework-trail {
+            position: fixed;
+            width: 2px;
+            height: 20px;
+            animation: trail 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall 3s linear forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ESTILOS PARA BIRTHDAY SECTION */
+        .birthday-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 30px;
+            padding: 50px 30px;
+            margin-top: 40px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .birthday-section:hover {
+            transform: scale(1.02);
+        }
+
+        .birthday-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%23ffffff" opacity="0.3"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+            animation: twinkle 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .birthday-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .birthday-subtitle {
+            font-size: 2.5rem;
+            color: #ffb3e6;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+        }
+
+        .birthday-message {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        .click-instruction {
+            font-size: 1.1rem;
+            color: #ffd700;
+            animation: pulse 2s infinite;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .floating-balloons {
+            position: absolute;
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .floating-balloons:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-balloons:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .floating-balloons:nth-child(3) { bottom: 20%; left: 15%; animation-delay: 2s; }
+        .floating-balloons:nth-child(4) { bottom: 15%; right: 10%; animation-delay: 1.5s; }
+
+        .birthday-cake {
+            font-size: 3rem;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ANIMACIONES ESPECÍFICAS PARA BIRTHDAY */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        /* EFECTOS DE FUEGOS ARTIFICIALES MEJORADOS */
+        .birthday-firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .heart-particle {
+            position: fixed;
+            font-size: 1.5rem;
+            animation: heart-float 3s ease-out forwards;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        .sparkle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #fff, #ffd700);
+            border-radius: 50%;
+            animation: sparkle-animation 2s ease-out forwards;
+            pointer-events: none;
+            z-index: 10000;
+        }
+
+        @keyframes firework {
+            0% { 
+                transform: scale(0) rotate(0deg); 
+                opacity: 1; 
+            }
+            50% { 
+                transform: scale(1.2) rotate(180deg); 
+                opacity: 0.9; 
+            }
+            100% { 
+                transform: scale(2) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        @keyframes burst {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes trail {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes heart-float {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-50px) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes sparkle-animation {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            #puzzleCanvas {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .info-panel {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .birthday-section {
+                padding: 30px 20px;
+                margin-top: 30px;
+            }
+
+            .birthday-title {
+                font-size: 2.5rem;
+            }
+
+            .birthday-subtitle {
+                font-size: 1.8rem;
+            }
+
+            .birthday-message {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a class="back-home" href="/">&larr; Volver al Inicio</a>
+    
+    <div class="container">
+        <h1>🌻 Puzzle Personalizable para Dedicar 💛🧩</h1>
+        <p class="subtitle">¡Crea un momento especial con este hermoso puzzle interactivo! 💖<br>
+        Sube cualquier foto de tu galería 📸 y elige la dificultad. Perfecto para sorprender a alguien especial! ✨</p>
+        
+        <div class="controls">
+            <div class="file-input-wrapper">
+                <input type="file" id="imageUpload" accept="image/*">
+                📸 Subir Imagen
+            </div>
+            
+            <select id="difficulty">
+                <option value="3">12 piezas (3x4) - Muy Fácil 🟢</option>
+                <option value="5">25 piezas (5x5) - Fácil 🟡</option>
+                <option value="7">49 piezas (7x7) - Medio 🟠</option>
+                <option value="10">100 piezas (10x10) - Difícil 🔴</option>
+                <option value="14">196 piezas (14x14) - Experto 🟣</option>
+            </select>
+            
+            <button class="start-btn" onclick="startPuzzle()">🎩 ¡Comenzar Puzzle!</button>
+        </div>
+
+        <div id="imagePreview"></div>
+
+        <div class="puzzle-area" id="puzzleArea" style="display: none;">
+            <canvas id="puzzleCanvas" width="600" height="600"></canvas>
+            
+            <div class="info-panel">
+                <div class="timer">⏱️ Tiempo: <span id="timeDisplay">00:00</span></div>
+                <button class="reset-btn" onclick="resetPuzzle()">🔄 Reiniciar</button>
+                <div class="moves">🔄 Movimientos: <span id="movesDisplay">0</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN DE HAPPY BIRTHDAY -->
+    <div class="birthday-section" onclick="createBirthdayFireworks()">
+        <div class="floating-balloons">🎈</div>
+        <div class="floating-balloons">🎀</div>
+        <div class="floating-balloons">💖</div>
+        <div class="floating-balloons">🌸</div>
+        
+        <div class="birthday-title">Happy Birthday!</div>
+        <div class="birthday-subtitle">✨ 22 Años ✨</div>
+        <div class="birthday-cake">🎂</div>
+        <div class="birthday-message">
+            🌹 Para una persona muy especial 🌹<br>
+            ¡Que este nuevo año esté lleno de alegría, amor y momentos maravillosos! 💝<br>
+            ¡Eres increíble y mereces lo mejor del mundo! 🦋
+        </div>
+        <div class="click-instruction">
+            👆 ¡Haz clic aquí para una sorpresa especial! 🎆
+        </div>
+    </div>
+
+    <!-- Modal de victoria -->
+    <div class="victory-modal" id="victoryModal">
+        <div class="victory-content">
+            <div class="victory-title">🎉 ¡FELICIDADES! 🎉</div>
+            <p>¡Has completado el puzzle!</p>
+            <p id="finalStats"></p>
+            <button class="start-btn" onclick="closeVictoryModal()" style="margin-top: 20px;">✨ ¡Genial!</button>
+        </div>
+    </div>
+
+    <script>
+        let canvas, ctx, image, gridSize, tileSize, puzzle, selectedIndex, gameStarted;
+        let startTime, moves, timerInterval;
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeGame();
+            setupEventListeners();
+        });
+
+        function initializeGame() {
+            canvas = document.getElementById('puzzleCanvas');
+            ctx = canvas.getContext('2d');
+            image = new Image();
+            gameStarted = false;
+            moves = 0;
+            selectedIndex = null;
+        }
+
+        function setupEventListeners() {
+            // Previsualizar imagen seleccionada
+            const imageUpload = document.getElementById('imageUpload');
+            if (imageUpload) {
+                imageUpload.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const preview = document.getElementById('imagePreview');
+                            preview.innerHTML = `<img src="${e.target.result}" class="preview-image" alt="Vista previa">`;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+
+            // Event listener para el canvas
+            if (canvas) {
+                canvas.addEventListener('click', handleCanvasClick);
+            }
+        }
+
+        function handleCanvasClick(e) {
+            if (!gameStarted) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+            const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+            
+            const col = Math.floor(x / tileSize);
+            const row = Math.floor(y / tileSize);
+            const clickedIndex = row * gridSize + col;
+            
+            if (clickedIndex < 0 || clickedIndex >= puzzle.length) return;
+            
+            if (selectedIndex === null) {
+                selectedIndex = clickedIndex;
+            } else if (selectedIndex === clickedIndex) {
+                selectedIndex = null;
+            } else {
+                swapPieces(selectedIndex, clickedIndex);
+                selectedIndex = null;
+                moves++;
+                updateMoves();
+                
+                if (isPuzzleComplete()) {
+                    gameCompleted();
+                }
+            }
+            
+            drawPuzzle();
+        }
+
+        function startPuzzle() {
+            console.log('Iniciando puzzle...'); // Debug
+            
+            const fileInput = document.getElementById('imageUpload');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('¡Por favor selecciona una imagen primero! 📸');
+                return;
+            }
+
+            gridSize = parseInt(document.getElementById('difficulty').value);
+            console.log('Grid size:', gridSize); // Debug
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                console.log('Archivo leído correctamente'); // Debug
+                image.onload = function() {
+                    console.log('Imagen cargada:', image.width, 'x', image.height); // Debug
+                    try {
+                        setupPuzzle();
+                        startTimer();
+                        document.getElementById('puzzleArea').style.display = 'block';
+                        document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+                    } catch (error) {
+                        console.error('Error al configurar puzzle:', error);
+                        alert('Error al configurar el puzzle. Por favor intenta de nuevo.');
+                    }
+                };
+                image.onerror = function() {
+                    console.error('Error al cargar la imagen');
+                    alert('Error al cargar la imagen. Por favor intenta con otra imagen.');
+                };
+                image.src = e.target.result;
+            };
+            reader.onerror = function() {
+                console.error('Error al leer el archivo');
+                alert('Error al leer el archivo. Por favor intenta de nuevo.');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function setupPuzzle() {
+            // Ajustar canvas al tamaño de la imagen manteniendo proporción
+            const maxSize = 600;
+            let canvasWidth, canvasHeight;
+            
+            if (image.width > image.height) {
+                canvasWidth = maxSize;
+                canvasHeight = (image.height / image.width) * maxSize;
+            } else {
+                canvasHeight = maxSize;
+                canvasWidth = (image.width / image.height) * maxSize;
+            }
+            
+            canvas.width = canvasWidth;
+            canvas.height = canvasHeight;
+            
+            tileSize = Math.min(canvasWidth / gridSize, canvasHeight / gridSize);
+            
+            // Crear puzzle
+            puzzle = [];
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    puzzle.push({
+                        currentIndex: row * gridSize + col,
+                        correctIndex: row * gridSize + col,
+                        row: row,
+                        col: col
+                    });
+                }
+            }
+            
+            // Mezclar puzzle
+            shufflePuzzle();
+            drawPuzzle();
+            gameStarted = true;
+            moves = 0;
+            updateMoves();
+        }
+
+        function shufflePuzzle() {
+            // Mezclar de manera que siempre sea solucionable
+            for (let i = 0; i < 1000; i++) {
+                const emptyIndex = puzzle.findIndex(p => p === null) || puzzle.length - 1;
+                const neighbors = getNeighbors(emptyIndex);
+                if (neighbors.length > 0) {
+                    const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+                    swapPieces(emptyIndex, randomNeighbor);
+                }
+            }
+            
+            // Método alternativo más simple
+            for (let i = puzzle.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [puzzle[i], puzzle[j]] = [puzzle[j], puzzle[i]];
+                // Actualizar índices actuales
+                puzzle[i].currentIndex = i;
+                puzzle[j].currentIndex = j;
+            }
+        }
+
+        function getNeighbors(index) {
+            const neighbors = [];
+            const row = Math.floor(index / gridSize);
+            const col = index % gridSize;
+            
+            if (row > 0) neighbors.push((row - 1) * gridSize + col);
+            if (row < gridSize - 1) neighbors.push((row + 1) * gridSize + col);
+            if (col > 0) neighbors.push(row * gridSize + (col - 1));
+            if (col < gridSize - 1) neighbors.push(row * gridSize + (col + 1));
+            
+            return neighbors;
+        }
+
+        function drawPuzzle() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            puzzle.forEach((piece, index) => {
+                if (piece) {
+                    const currentRow = Math.floor(index / gridSize);
+                    const currentCol = index % gridSize;
+                    const correctRow = piece.row;
+                    const correctCol = piece.col;
+                    
+                    // Coordenadas en el canvas
+                    const x = currentCol * tileSize;
+                    const y = currentRow * tileSize;
+                    
+                    // Coordenadas en la imagen original
+                    const sx = correctCol * (image.width / gridSize);
+                    const sy = correctRow * (image.height / gridSize);
+                    const sw = image.width / gridSize;
+                    const sh = image.height / gridSize;
+                    
+                    // Dibujar pieza
+                    ctx.drawImage(image, sx, sy, sw, sh, x, y, tileSize, tileSize);
+                    
+                    // Borde de la pieza
+                    ctx.strokeStyle = index === selectedIndex ? '#74b9ff' : '#ddd';
+                    ctx.lineWidth = index === selectedIndex ? 4 : 2;
+                    ctx.strokeRect(x, y, tileSize, tileSize);
+                }
+            });
+        }
+
+        function swapPieces(index1, index2) {
+            [puzzle[index1], puzzle[index2]] = [puzzle[index2], puzzle[index1]];
+            if (puzzle[index1]) puzzle[index1].currentIndex = index1;
+            if (puzzle[index2]) puzzle[index2].currentIndex = index2;
+        }
+
+        function isPuzzleComplete() {
+            // Verificar que cada pieza esté en su posición correcta
+            for (let i = 0; i < puzzle.length; i++) {
+                const piece = puzzle[i];
+                if (!piece) continue;
+                
+                // La pieza debe estar en su posición original
+                const currentRow = Math.floor(i / gridSize);
+                const currentCol = i % gridSize;
+                
+                if (piece.row !== currentRow || piece.col !== currentCol) {
+                    return false;
+                }
+            }
+            
+            console.log('¡PUZZLE COMPLETADO! 🎉'); // Debug
+            return true;
+        }
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('timeDisplay').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function updateMoves() {
+            document.getElementById('movesDisplay').textContent = moves;
+        }
+
+        function gameCompleted() {
+            console.log('Ejecutando celebración...'); // Debug
+            clearInterval(timerInterval);
+            gameStarted = false;
+            
+            // Mostrar estadísticas finales
+            const finalTime = document.getElementById('timeDisplay').textContent;
+            const finalStats = `Tiempo: ${finalTime} | Movimientos: ${moves}`;
+            document.getElementById('finalStats').textContent = finalStats;
+            
+            // Crear efectos de celebración
+            createVictoryFireworks();
+            createConfettiRain();
+            
+            // Mostrar modal de victoria después de un breve delay
+            setTimeout(() => {
+                document.getElementById('victoryModal').style.display = 'flex';
+            }, 1000);
+        }
+
+        function createVictoryFireworks() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#98d8c8'];
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'fireworks';
+                    firework.innerHTML = '🎆';
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight + 'px';
+                    firework.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    document.body.appendChild(firework);
+                    
+                    // Crear partículas de explosión
+                    createBurstParticles(firework);
+                    
+                    setTimeout(() => {
+                        if (firework.parentNode) {
+                            firework.parentNode.removeChild(firework);
+                        }
+                    }, 2000);
+                }, i * 300);
+            }
+        }
+
+        function createBurstParticles(centerElement) {
+            const rect = centerElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+            
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-burst';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (i * 30) * Math.PI / 180;
+                const distance = 50 + Math.random() * 50;
+                const endX = centerX + Math.cos(angle) * distance;
+                const endY = centerY + Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--end-x', endX + 'px');
+                particle.style.setProperty('--end-y', endY + 'px');
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1500);
+            }
+        }
+
+        function createConfettiRain() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dda0dd', '#98d8c8', '#f093fb'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.top = '-10px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 3000);
+                }, i * 100);
+            }
+        }
+
+        function createBirthdayFireworks() {
+            // Crear múltiples fuegos artificiales de cumpleaños
+            const birthdayColors = ['#ff69b4', '#ffd700', '#ff1493', '#00bfff', '#98fb98', '#dda0dd'];
+            
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'birthday-firework';
+                    firework.innerHTML = ['🎆', '✨', '🎇', '💫'][Math.floor(Math.random() * 4)];
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight + 'px';
+                    firework.style.fontSize = (1.5 + Math.random() * 2) + 'rem';
+                    firework.style.color = birthdayColors[Math.floor(Math.random() * birthdayColors.length)];
+                    firework.style.animation = 'firework 2s ease-out forwards';
+                    
+                    document.body.appendChild(firework);
+                    
+                    // Crear corazones flotantes
+                    createHeartParticles(firework);
+                    
+                    setTimeout(() => {
+                        if (firework.parentNode) {
+                            firework.parentNode.removeChild(firework);
+                        }
+                    }, 2000);
+                }, i * 200);
+            }
+            
+            // Crear efecto de brillo adicional
+            createSparkleEffect();
+        }
+
+        function createHeartParticles(centerElement) {
+            const rect = centerElement.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const hearts = ['💖', '💕', '💗', '🌸', '🦋', '✨'];
+            
+            for (let i = 0; i < 8; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = centerX + (Math.random() - 0.5) * 100 + 'px';
+                heart.style.top = centerY + (Math.random() - 0.5) * 100 + 'px';
+                heart.style.fontSize = (1 + Math.random()) + 'rem';
+                
+                document.body.appendChild(heart);
+                
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 3000);
+            }
+        }
+
+        function createSparkleEffect() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        if (sparkle.parentNode) {
+                            sparkle.parentNode.removeChild(sparkle);
+                        }
+                    }, 2000);
+                }, i * 150);
+            }
+        }
+
+        function resetPuzzle() {
+            if (!gameStarted && !timerInterval) {
+                alert('¡Primero inicia un puzzle! 🧩');
+                return;
+            }
+            
+            clearInterval(timerInterval);
+            gameStarted = false;
+            moves = 0;
+            selectedIndex = null;
+            
+            if (puzzle && puzzle.length > 0) {
+                shufflePuzzle();
+                drawPuzzle();
+                startTimer();
+                gameStarted = true;
+                updateMoves();
+            }
+        }
+
+        function closeVictoryModal() {
+            document.getElementById('victoryModal').style.display = 'none';
+        }
+
+        // Funciones de utilidad adicionales
+        function addCustomStyle() {
+            const style = document.createElement('style');
+            style.textContent = `
+                .firework-burst {
+                    animation: burst-move 1.5s ease-out forwards;
+                }
+                
+                @keyframes burst-move {
+                    0% {
+                        transform: translate(0, 0) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translate(var(--end-x, 0), var(--end-y, 0)) scale(0);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Inicializar estilos personalizados
+        addCustomStyle();
+
+        // Función para limpiar efectos visuales
+        function cleanupEffects() {
+            const effects = document.querySelectorAll('.fireworks, .firework-burst, .confetti, .birthday-firework, .heart-particle, .sparkle');
+            effects.forEach(effect => {
+                if (effect.parentNode) {
+                    effect.parentNode.removeChild(effect);
+                }
+            });
+        }
+
+        // Limpiar efectos cuando se sale de la página
+        window.addEventListener('beforeunload', cleanupEffects);
+    </script>
+</body>
+</html>

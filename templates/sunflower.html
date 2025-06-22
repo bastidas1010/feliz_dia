@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌻 Girasol Especial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+            to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #FFD700;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        #sunflowerImage {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+        }
+        
+        #sunflowerImage.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FFD700;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #2a5298;
+            transform: translateY(-2px);
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); opacity: 0; }
+            50% { transform: translateY(-100px); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <a href="/" class="back-btn">← Volver al Inicio</a>
+    
+    <div class="header">
+        <h1>🌻 Girasol Especial 🌻</h1>
+        <p class="subtitle">Un regalo único creado con amor matemático</p>
+        <p id="sunflowerCount" style="margin-top: 15px; font-size: 1rem; color: #FFD700;"></p>
+    </div>
+    
+    <div class="container">
+        <button class="generate-btn" onclick="generateSunflower()" id="generateBtn">
+            ✨ Crear Mi Girasol ✨
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Cultivando tu girasol especial...</p>
+        </div>
+        
+        <img id="sunflowerImage" alt="Girasol Especial" style="display: none;">
+        
+        <div class="message">
+            <h3>💖 Motivo Especial 💖</h3>
+            <p>Estos girasoles han sido creados especialmente para ti usando la belleza de las matemáticas. 
+            Cada semilla está posicionada siguiendo la secuencia de Fibonacci y el ángulo dorado, 
+            creando la espiral perfecta que vemos en la naturaleza. En este dia tan especial, te mereces todas las flores del mundo.</p>
+            <p><strong>Y asi como este girasol siempre busca la luz del sol, 
+            espero que en tu vida siempre encuentres la felicidad y puedas disfrutar
+            de muchos dias soleados en tu vida. ¡Feliz Cumpleaños! 🎉</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // Crear partículas flotantes
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                container.appendChild(particle);
+            }
+        }
+        
+        function generateSunflower() {
+        const btn = document.getElementById('generateBtn');
+        const loading = document.getElementById('loading');
+        const image = document.getElementById('sunflowerImage');
+        const countText = document.getElementById('sunflowerCount');
+
+        // Mostrar carga
+        btn.disabled = true;
+        loading.style.display = 'block';
+        image.style.display = 'none';
+        image.classList.remove('show');
+
+        fetch('/generate_sunflower')
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                image.src = data.image_url;
+                image.style.display = 'block';
+                setTimeout(() => image.classList.add('show'), 100);
+                btn.disabled = false;
+                btn.textContent = '🌻 Cultivar Otro Girasol 🌻';
+                countText.textContent = `🌻 Girasoles generados: ${data.count}`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                loading.style.display = 'none';
+                btn.disabled = false;
+                alert('Perdon, ocurrió un error al crear el girasol. Intenta nuevamente.');
+            });
+    }
+
+    createParticles();
+    </script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Feliz día!</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background-color: #d8bfd8;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        font-family: 'Arial', sans-serif;
+    }
+    
+    /* Estilo del menú */
+    .menu {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+    }
+    
+    .menu-button {
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .menu-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+    }
+    
+    .menu-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        pointer-events: none;
+        min-width: 200px;
+    }
+    
+    .menu-dropdown.active {
+        opacity: 1;
+        transform: translateY(5px);
+        pointer-events: all;
+    }
+    
+    .menu-item {
+        display: block;
+        padding: 15px 20px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s ease;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .menu-item:hover {
+        background-color: #ff69b4;
+        color: white;
+    }
+    
+    .menu-item:last-child {
+        border-bottom: none;
+    }
+    
+    .confetti {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+    .loader {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: black;
+        z-index: 10;
+    }
+    .loader .spinner {
+        border: 8px solid rgba(255, 255, 255, 0.1);
+        border-top: 8px solid white;
+        border-radius: 50%;
+        width: 80px; height: 80px;
+        animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .fade-out {
+        animation: fadeOut 1s forwards;
+    }
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    h1 {
+        font-size: 5rem;
+        color: #ff69b4;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        font-weight: bold;
+        overflow: hidden;
+        visibility: hidden;
+        margin-bottom: 5px;
+    }
+    h1 span {
+        display: inline-block;
+        opacity: 0;
+    }
+
+    .music-player {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        padding: 10px;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .music-player button {
+        background-color: #ff69b4;
+        border: none;
+        color: white;
+        padding: 10px;
+        margin: 0 5px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .music-player button:hover {
+        background-color: #ff85a2;
+        box-shadow: 0 0 10px #ff69b4, 0 0 20px #ff69b4, 0 0 30px #ff69b4;
+    }
+    .now-playing {
+        margin-left: 10px;
+        font-size: 16px;
+    }
+
+    .birthday-message {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+        padding: 20px;
+        border-radius: 10px;
+        color: #fff;
+        font-family: 'Brush Script MT', cursive;
+        font-size: 1.5rem;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(20px);
+        z-index: 2;
+    }
+
+    @keyframes slideUpFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message-visible {
+        animation: slideUpFadeIn 1s ease-out forwards;
+    }
+
+    .balloon {
+        position: absolute;
+        bottom: -150px;
+        width: 40px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: red;
+        z-index: 0;
+    }
+
+    .balloon::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        width: 2px;
+        height: 20px;
+        background-color: #555;
+        transform: translateX(-50%);
+    }
+
+    .emoji {
+        position: fixed;
+        font-size: 2.5rem;
+        z-index: 2;
+    }
+
+    .emoji.top-left {
+        top: 10px;
+        left: 10px;
+    }
+
+    .emoji.top-right {
+        top: 10px;
+        right: 10px;
+    }
+
+    .emoji.bottom-left {
+        bottom: 10px;
+        left: 10px;
+    }
+
+    .emoji.bottom-right {
+        bottom: 10px;
+        right: 10px;
+    }
+    .loader .loader-img {
+    width: 700px;
+    height: auto;
+    }
+    #birthdayImage {
+    opacity: 0;
+    transform: translateY(20px);
+    z-index: 2;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.2/gsap.min.js"></script>
+</head>
+<body>
+<!-- Menú -->
+<div class="menu">
+    <button class="menu-button" onclick="toggleMenu()">☰ Menú</button>
+    <div class="menu-dropdown" id="menuDropdown">
+        <a href="#" class="menu-item" onclick="closeMenu()">🏠 Inicio</a>
+        <a href="/sunflower" class="menu-item">🌻 Girasol Especial</a>
+        <a href="/mensajes" class="menu-item">💝 Mensajes Especiales</a>
+        <a href="/detalles" class="menu-item">📎 Detalles</a>
+    </div>
+</div>
+
+<div class="loader" id="loader">
+    <img src="https://raw.githubusercontent.com/JDNG111/feliz_cumple/main/nota_importante.png" alt="Cargando..." class="loader-img">
+</div>
+<div class="confetti" id="confetti"></div>
+<h1 id="birthdayTitle">
+    <span>¡</span><span>F</span><span>E</span><span>L</span><span>I</span><span>Z</span><span> </span>
+    <span>C</span><span>U</span><span>M</span><span>P</span><span>L</span><span>E</span><span>A</span><span>Ñ</span><span>O</span><span>S</span><span>!</span>
+</h1>
+
+<img id="birthdayImage" src="https://raw.githubusercontent.com/JDNG111/feliz_cumple/main/nube_de_ideas.png" alt="Nube de Ideas" style="width: 300px; height: auto; margin-bottom: 0px;">
+
+<div class="birthday-message" id="birthdayMessage">
+    Que este nuevo año de vida esté lleno de bendiciones, amor y alegría. Que Dios te guíe y proteja siempre.<br>
+    "El Señor te bendiga y te guarde; el Señor haga resplandecer su rostro sobre ti, y tenga de ti misericordia."<br>
+    <strong>- Números 6:24-25</strong>
+</div>
+
+<div class="music-player">
+    <button onclick="prevSong()">⏮️</button>
+    <button onclick="togglePlayPause()">⏯️</button>
+    <button onclick="nextSong()">⏭️</button>
+    <div class="now-playing" id="nowPlaying">Ahora sonando: Feliz cumpleaños</div>
+    <audio id="audioPlayer"></audio>
+</div>
+
+<div class="emoji top-left">🎉</div>
+<div class="emoji top-right">🎂</div>
+<div class="emoji bottom-left">🎁</div>
+<div class="emoji bottom-right">🎈</div>
+
+<script>
+    // Función para toggle del menú
+    function toggleMenu() {
+        const dropdown = document.getElementById('menuDropdown');
+        dropdown.classList.toggle('active');
+    }
+    
+    function closeMenu() {
+        document.getElementById('menuDropdown').classList.remove('active');
+    }
+    
+    function showMoreMessages() {
+        alert('¡Aquí podrás ver más mensajes especiales muy pronto! 💝');
+        closeMenu();
+    }
+    
+    function showGallery() {
+        alert('¡Galería de fotos próximamente! 📸');
+        closeMenu();
+    }
+    
+    // Cerrar menú al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const menu = document.querySelector('.menu');
+        if (!menu.contains(event.target)) {
+            closeMenu();
+        }
+    });
+
+    // Anime.js Confetti Animation
+    function createConfetti() {
+        for (let i = 0; i < 100; i++) {
+            let confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.position = 'absolute';
+            confetti.style.width = `${Math.random() * 10 + 5}px`;
+            confetti.style.height = `${Math.random() * 10 + 5}px`;
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.left = `${Math.random() * window.innerWidth}px`;
+            confetti.style.top = `${-50}px`;
+            document.body.appendChild(confetti);
+
+            anime({
+                targets: confetti,
+                translateY: window.innerHeight + 50,
+                translateX: `+=${Math.random() * 200 - 100}`,
+                rotate: Math.random() * 360,
+                duration: Math.random() * 2000 + 3000,
+                easing: 'easeInOutQuad',
+                complete: () => confetti.remove()
+            });
+        }
+    }
+
+    setInterval(createConfetti, 500);
+
+    setTimeout(() => {
+        document.getElementById('loader').classList.add('fade-out');
+        setTimeout(() => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('birthdayTitle').style.visibility = 'visible';
+            animateTitle();
+        }, 1000);
+        playMusic();
+    }, 5000);
+
+    function animateTitle() {
+        gsap.fromTo("#birthdayTitle span", { opacity: 0, y: -50 }, {
+            opacity: 1,
+            y: 0,
+            stagger: 0.1,
+            duration: 0.5,
+            ease: "back.out(1.7)",
+            onComplete: () => {
+                gsap.to("#birthdayImage", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                });
+
+                document.getElementById('birthdayMessage').classList.add('message-visible');
+                animateBalloons();
+            }
+        });
+    }
+
+    function animateBalloons() {
+        const colors = ['#ff69b4', '#ff4500', '#ffa500', '#ff6347', '#ff1493', '#ffd700'];
+        for (let i = 0; i < 30; i++) {
+            let balloon = document.createElement('div');
+            balloon.classList.add('balloon');
+            balloon.style.left = `${Math.random() * 100}vw`;
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(balloon);
+
+            gsap.to(balloon, {
+                y: -window.innerHeight - 100,
+                duration: Math.random() * 5 + 5,
+                ease: "power1.inOut",
+                repeat: -1,
+                delay: Math.random() * 2,
+                onComplete: () => balloon.remove()
+            });
+        }
+    }
+
+    const audioPlayer = document.getElementById('audioPlayer');
+    const nowPlaying = document.getElementById('nowPlaying');
+    let currentSong = 0;
+    const songs = [
+        {
+            title: "Feliz cumpleaños",
+            url: "https://raw.githubusercontent.com/JDNG111/feliz_cumple/main/Cumplea%C3%B1os%20feliz%20con%20Piano%20y%20Violin%2C%20precioso.mp3"
+        },
+        {
+            title: "Cumpleaños feliz",
+            url: "https://raw.githubusercontent.com/JDNG111/feliz_cumple/main/Germ%C3%A1n%20Barcel%C3%B3%2C%20Manuel%20Wirzt-Que%20se%20cumplan%20tus%20sue%C3%B1os%20(Official%20Video).mp3"
+        },
+        {
+            title: "Que los cumplas feliz",
+            url: "https://raw.githubusercontent.com/JDNG111/feliz_cumple/main/ramdomly%20(online-audio-converter.com).mp3"
+        }
+    ];
+
+    function playMusic() {
+        audioPlayer.src = songs[currentSong].url;
+        nowPlaying.textContent = `Ahora sonando: ${songs[currentSong].title}`;
+        audioPlayer.play();
+    }
+
+    function togglePlayPause() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+        } else {
+            audioPlayer.pause();
+        }
+    }
+
+    function prevSong() {
+        currentSong = (currentSong - 1 + songs.length) % songs.length;
+        playMusic();
+    }
+
+    function nextSong() {
+        currentSong = (currentSong + 1) % songs.length;
+        playMusic();
+    }
+
+    audioPlayer.addEventListener('ended', nextSong);
+</script>
+</body>
+</html>
