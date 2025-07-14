@@ -270,7 +270,7 @@
         
         <div class="birthday-message">
             <h3>🎂 ¡Feliz Cumpleaños!</h3>
-            <p>Cada pastel es una obra de arte generada con Python, llena de colores vibrantes, velas brillantes y toda la magia que mereces en tu día especial.</p>
+            <p>Cada pastel es una obra de arte unica como tú, llena de colores vibrantes, velas brillantes y toda la magia que mereces en tu día especial.</p>
         </div>
 
         <div class="cake-container">
@@ -420,5 +420,1060 @@
         `;
         document.head.appendChild(style);
     </script>
+<br>
+<br>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎵 Generador de Lyrics Animadas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .song-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #6a1b9a;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .song-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .song-btn {
+            background: linear-gradient(45deg, #6a1b9a, #9c27b0);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(106, 27, 154, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .song-btn:hover::before {
+            left: 100%;
+        }
+
+        .song-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(106, 27, 154, 0.4);
+        }
+
+        .song-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .custom-lyrics {
+            margin: 20px 0;
+        }
+
+        .custom-lyrics textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-lyrics textarea:focus {
+            outline: none;
+            border-color: #6a1b9a;
+        }
+
+        .song-display {
+            margin-top: 30px;
+            padding: 30px;
+            border-radius: 20px;
+            min-height: 400px;
+            position: relative;
+            display: none;
+            overflow: hidden;
+        }
+
+        .song-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInTitle 1s ease-out forwards;
+        }
+
+        .lyric-line {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateX(-50px);
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+        }
+
+        .lyric-line.active {
+            animation: fadeInSlide 0.5s ease-out forwards;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #f0f0f0);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .song-controls-playing {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        .loading-song {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .loading-song-spinner {
+            border: 4px solid rgba(106, 27, 154, 0.3);
+            border-top: 4px solid #6a1b9a;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        .loading-song-text {
+            margin-top: 15px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .success-message-song {
+            background: linear-gradient(45deg, #4caf50, #66bb6a);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .error-message-song {
+            background: linear-gradient(45deg, #f44336, #ef5350);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        @keyframes fadeInTitle {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInSlide {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .floating-notes {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+            animation: floatUp 4s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .song-section {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .song-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .song-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="song-section">
+            <h2>🎵 Generador de Canciones Animadas</h2>
+            <p class="subtitle">Ahora que comimos el pastel, es tiempo de cantar una canción</p>
+            
+            <div class="song-controls">
+                <button onclick="generateRandomSong()" id="randomSongBtn" class="song-btn">
+                    🎲 Canción Aleatoria
+                </button>
+                <button onclick="toggleCustomLyrics()" id="customBtn" class="song-btn">
+                    ✍️ Crear Personalizada
+                </button>
+                <button onclick="stopSong()" id="stopBtn" class="song-btn" style="display: none;">
+                    ⏹️ Detener
+                </button>
+            </div>
+
+            <div class="custom-lyrics" id="customLyricsSection" style="display: none;">
+                <textarea id="customLyricsInput" placeholder="Escribe aquí las letras de tu canción personalizada...&#10;&#10;Ejemplo:&#10;Esta es mi canción especial&#10;Llena de amor y alegría&#10;Cada palabra tiene sentido&#10;En este día tan especial"></textarea>
+                <button onclick="createCustomSong()" id="createCustomBtn" class="song-btn">
+                    🎵 Crear Mi Canción
+                </button>
+            </div>
+            
+            <div class="loading-song" id="loadingSong">
+                <div class="loading-song-spinner"></div>
+                <div class="loading-song-text">Preparando tu canción mágica... 🎼</div>
+            </div>
+            
+            <div class="success-message-song" id="successMessageSong">
+                ¡Tu canción está lista! 🎉 ¡Disfruta la experiencia musical!
+            </div>
+            
+            <div class="error-message-song" id="errorMessageSong">
+                Ups, algo salió mal con la canción. Inténtalo de nuevo.
+            </div>
+            
+            <div class="song-display" id="songDisplay">
+                <div class="song-controls-playing">
+                    <button onclick="pauseResumeSong()" id="pauseBtn" class="control-btn">⏸️ Pausa</button>
+                    <button onclick="restartSong()" id="restartBtn" class="control-btn">⏮️ Reiniciar</button>
+                </div>
+                
+                <div class="song-title" id="songTitle">Título de la Canción</div>
+                <div id="lyricsContainer"></div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSong = null;
+        let songTimeouts = [];
+        let isPaused = false;
+        let startTime = 0;
+        let pausedTime = 0;
+
+        function generateRandomSong() {
+            const btn = document.getElementById('randomSongBtn');
+            const loading = document.getElementById('loadingSong');
+            const successMsg = document.getElementById('successMessageSong');
+            const errorMsg = document.getElementById('errorMessageSong');
+            const songDisplay = document.getElementById('songDisplay');
+            
+            // Resetear estados
+            resetSongState();
+            btn.disabled = true;
+            btn.textContent = 'Generando...';
+            loading.style.display = 'block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            songDisplay.style.display = 'none';
+            
+            // Crear efecto de notas flotantes
+            createFloatingNotes();
+            
+            fetch('/generate_song')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentSong = data.song_data;
+                        setupSongDisplay(currentSong);
+                        successMsg.style.display = 'block';
+                        startSong();
+                    } else {
+                        errorMsg.textContent = data.error || 'Error desconocido';
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMsg.textContent = 'Error de conexión. Verifica tu internet.';
+                    errorMsg.style.display = 'block';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = '🎲 Otra Canción';
+                    loading.style.display = 'none';
+                });
+        }
+
+        function toggleCustomLyrics() {
+            const section = document.getElementById('customLyricsSection');
+            const btn = document.getElementById('customBtn');
+            
+            if (section.style.display === 'none') {
+                section.style.display = 'block';
+                btn.textContent = '❌ Cancelar';
+            } else {
+                section.style.display = 'none';
+                btn.textContent = '✍️ Crear Personalizada';
+            }
+        }
+
+        function createCustomSong() {
+            const customLyrics = document.getElementById('customLyricsInput').value.trim();
+            
+            if (!customLyrics) {
+                alert('Por favor escribe las letras de tu canción personalizada.');
+                return;
+            }
+
+            const btn = document.getElementById('createCustomBtn');
+            const loading = document.getElementById('loadingSong');
+            const successMsg = document.getElementById('successMessageSong');
+            const errorMsg = document.getElementById('errorMessageSong');
+            const songDisplay = document.getElementById('songDisplay');
+            
+            // Resetear estados
+            resetSongState();
+            btn.disabled = true;
+            btn.textContent = 'Creando...';
+            loading.style.display = 'block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            songDisplay.style.display = 'none';
+            
+            fetch('/create_custom_song', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    custom_lyrics: customLyrics
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        currentSong = data.song_data;
+                        setupSongDisplay(currentSong);
+                        successMsg.style.display = 'block';
+                        toggleCustomLyrics(); // Ocultar el formulario
+                        startSong();
+                    } else {
+                        errorMsg.textContent = data.error || 'Error desconocido';
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorMsg.textContent = 'Error de conexión. Verifica tu internet.';
+                    errorMsg.style.display = 'block';
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = '🎵 Crear Mi Canción';
+                    loading.style.display = 'none';
+                });
+        }
+
+        function setupSongDisplay(songData) {
+            const songDisplay = document.getElementById('songDisplay');
+            const songTitle = document.getElementById('songTitle');
+            const lyricsContainer = document.getElementById('lyricsContainer');
+            
+            // Configurar colores
+            songDisplay.style.backgroundColor = songData.background_color;
+            songDisplay.style.color = songData.text_color;
+            songDisplay.style.display = 'block';
+            
+            // Configurar título
+            songTitle.textContent = songData.title;
+            
+            // Limpiar letras anteriores
+            lyricsContainer.innerHTML = '';
+            
+            // Crear elementos para cada línea
+            songData.lyrics.forEach((lyric, index) => {
+                const lyricElement = document.createElement('div');
+                lyricElement.className = 'lyric-line';
+                lyricElement.textContent = lyric[0];
+                lyricElement.id = `lyric-${index}`;
+                lyricsContainer.appendChild(lyricElement);
+            });
+        }
+
+        function startSong() {
+            if (!currentSong) return;
+            
+            document.getElementById('stopBtn').style.display = 'inline-block';
+            document.getElementById('pauseBtn').style.display = 'inline-block';
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            
+            startTime = Date.now();
+            isPaused = false;
+            
+            // Animar cada línea
+            currentSong.lyrics.forEach((lyric, index) => {
+                const delay = currentSong.delays[index] * 1000; // Convertir a milisegundos
+                const speed = lyric[1] * 1000; // Velocidad de escritura
+                
+                const timeout = setTimeout(() => {
+                    if (!isPaused) {
+                        animateLyric(index, lyric[0], speed);
+                    }
+                }, delay);
+                
+                songTimeouts.push(timeout);
+            });
+            
+            // Actualizar barra de progreso
+            updateProgressBar();
+        }
+
+        function animateLyric(index, text, speed) {
+            const lyricElement = document.getElementById(`lyric-${index}`);
+            if (!lyricElement) return;
+            
+            lyricElement.classList.add('active');
+            lyricElement.textContent = '';
+            
+            let charIndex = 0;
+            const typeInterval = setInterval(() => {
+                if (isPaused) {
+                    clearInterval(typeInterval);
+                    return;
+                }
+                
+                lyricElement.textContent += text[charIndex];
+                charIndex++;
+                
+                if (charIndex >= text.length) {
+                    clearInterval(typeInterval);
+                }
+            }, speed);
+        }
+
+        function updateProgressBar() {
+            const progressFill = document.getElementById('progressFill');
+            const totalDuration = currentSong.total_duration * 1000;
+            
+            const progressInterval = setInterval(() => {
+                if (isPaused) return;
+                
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min((elapsed / totalDuration) * 100, 100);
+                progressFill.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                    setTimeout(() => {
+                        document.getElementById('stopBtn').style.display = 'none';
+                    }, 2000);
+                }
+            }, 100);
+        }
+
+        function pauseResumeSong() {
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (isPaused) {
+                // Reanudar
+                isPaused = false;
+                pauseBtn.textContent = '⏸️ Pausa';
+                startTime = Date.now() - pausedTime;
+                // Reanudar animaciones pendientes
+                restartPendingAnimations();
+            } else {
+                // Pausar
+                isPaused = true;
+                pauseBtn.textContent = '▶️ Continuar';
+                pausedTime = Date.now() - startTime;
+            }
+        }
+
+        function restartSong() {
+            resetSongState();
+            if (currentSong) {
+                setupSongDisplay(currentSong);
+                startSong();
+            }
+        }
+
+        function stopSong() {
+            resetSongState();
+            document.getElementById('songDisplay').style.display = 'none';
+            document.getElementById('stopBtn').style.display = 'none';
+        }
+
+        function resetSongState() {
+            // Limpiar timeouts
+            songTimeouts.forEach(timeout => clearTimeout(timeout));
+            songTimeouts = [];
+            
+            // Resetear variables
+            isPaused = false;
+            startTime = 0;
+            pausedTime = 0;// Limpiar elementos de progreso
+            document.getElementById('progressFill').style.width = '0%';
+            
+            // Ocultar controles
+            document.getElementById('pauseBtn').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'none';
+        }
+
+        function restartPendingAnimations() {
+            if (!currentSong) return;
+            
+            // Limpiar cualquier animación activa antes de reiniciar
+            clearAllAnimations();
+            
+            const currentTime = Date.now() - startTime;
+            
+            currentSong.lyrics.forEach((lyric, index) => {
+                const delay = currentSong.delays[index] * 1000;
+                const speed = lyric[1] * 1000;
+                
+                const lyricElement = document.getElementById(`lyric-${index}`);
+                if (!lyricElement) return;
+                
+                if (delay > currentTime) {
+                    // Esta animación aún no ha comenzado
+                    const remainingDelay = delay - currentTime;
+                    const timeout = setTimeout(() => {
+                        if (!isPaused) {
+                            animateLyric(index, lyric[0], speed);
+                        }
+                    }, remainingDelay);
+                    
+                    songTimeouts.push(timeout);
+                } else {
+                    // Esta línea ya debería estar visible, verificar si necesita continuar animándose
+                    const timeSinceStart = currentTime - delay;
+                    const expectedChars = Math.floor(timeSinceStart / speed);
+                    const fullText = lyric[0];
+                    
+                    if (expectedChars < fullText.length) {
+                        // Continuar la animación desde donde se pausó
+                        const currentText = fullText.substring(0, expectedChars);
+                        lyricElement.textContent = currentText;
+                        lyricElement.classList.add('active');
+                        
+                        // Continuar escribiendo el resto del texto
+                        let charIndex = expectedChars;
+                        const typeInterval = setInterval(() => {
+                            if (isPaused) {
+                                clearInterval(typeInterval);
+                                return;
+                            }
+                            
+                            if (charIndex < fullText.length) {
+                                lyricElement.textContent += fullText[charIndex];
+                                charIndex++;
+                            } else {
+                                clearInterval(typeInterval);
+                                const intervalIndex = activeIntervals.indexOf(typeInterval);
+                                if (intervalIndex > -1) {
+                                    activeIntervals.splice(intervalIndex, 1);
+                                }
+                            }
+                        }, speed);
+                        
+                        activeIntervals.push(typeInterval);
+                    } else {
+                        // La línea ya debería estar completamente visible
+                        lyricElement.textContent = fullText;
+                        lyricElement.classList.add('active');
+                    }
+                }
+            });
+        }
+
+        function createFloatingNotes() {
+            const notes = ['🎵', '🎶', '♪', '♫', '🎼', '🎤'];
+            const container = document.body;
+            
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => {
+                    const note = document.createElement('div');
+                    note.className = 'floating-notes';
+                    note.textContent = notes[Math.floor(Math.random() * notes.length)];
+                    note.style.left = Math.random() * window.innerWidth + 'px';
+                    note.style.top = window.innerHeight + 'px';
+                    
+                    container.appendChild(note);
+                    
+                    setTimeout(() => {
+                        container.removeChild(note);
+                    }, 4000);
+                }, i * 200);
+            }
+        }
+
+        // Función para generar efectos visuales durante la reproducción
+        function createVisualEffects() {
+            const songDisplay = document.getElementById('songDisplay');
+            if (!songDisplay || songDisplay.style.display === 'none') return;
+            
+            // Crear efecto de pulso sutil
+            songDisplay.style.animation = 'pulse 2s ease-in-out infinite';
+            
+            // Limpiar efecto después de un tiempo
+            setTimeout(() => {
+                songDisplay.style.animation = 'none';
+            }, 10000);
+        }
+
+        // Función para manejar errores de red
+        function handleNetworkError() {
+            const errorMsg = document.getElementById('errorMessageSong');
+            errorMsg.textContent = 'Error de conexión. Verifica tu conexión a internet e inténtalo de nuevo.';
+            errorMsg.style.display = 'block';
+            
+            // Ocultar mensaje después de 5 segundos
+            setTimeout(() => {
+                errorMsg.style.display = 'none';
+            }, 5000);
+        }
+
+        // Función para validar entrada personalizada
+        function validateCustomLyrics(lyrics) {
+            if (!lyrics || lyrics.trim().length === 0) {
+                return { valid: false, message: 'Las letras no pueden estar vacías.' };
+            }
+            
+            if (lyrics.length > 2000) {
+                return { valid: false, message: 'Las letras son demasiado largas. Máximo 2000 caracteres.' };
+            }
+            
+            const lines = lyrics.split('\n').filter(line => line.trim().length > 0);
+            if (lines.length === 0) {
+                return { valid: false, message: 'Debe haber al menos una línea con texto.' };
+            }
+            
+            if (lines.length > 20) {
+                return { valid: false, message: 'Máximo 20 líneas permitidas.' };
+            }
+            
+            return { valid: true };
+        }
+
+        // Mejorar la función createCustomSong con validación
+        function createCustomSong() {
+            const customLyrics = document.getElementById('customLyricsInput').value.trim();
+            
+            const validation = validateCustomLyrics(customLyrics);
+            if (!validation.valid) {
+                alert(validation.message);
+                return;
+            }
+
+            const btn = document.getElementById('createCustomBtn');
+            const loading = document.getElementById('loadingSong');
+            const successMsg = document.getElementById('successMessageSong');
+            const errorMsg = document.getElementById('errorMessageSong');
+            const songDisplay = document.getElementById('songDisplay');
+            
+            // Resetear estados
+            resetSongState();
+            btn.disabled = true;
+            btn.textContent = 'Creando...';
+            loading.style.display = 'block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            songDisplay.style.display = 'none';
+            
+            // Crear efectos visuales
+            createFloatingNotes();
+            
+            // Simular llamada al backend (ya que no tenemos servidor real)
+            setTimeout(() => {
+                try {
+                    // Procesar letras personalizadas
+                    const processedLyrics = [];
+                    const delays = [];
+                    
+                    const lines = customLyrics.split('\n').filter(line => line.trim().length > 0);
+                    let currentDelay = 0.5;
+                    
+                    lines.forEach(line => {
+                        const cleanLine = line.trim();
+                        if (cleanLine) {
+                            const speed = cleanLine.length < 20 ? 0.08 : cleanLine.length < 40 ? 0.06 : 0.04;
+                            processedLyrics.push([cleanLine, speed]);
+                            delays.push(currentDelay);
+                            currentDelay += cleanLine.length * speed + 1.5;
+                        }
+                    });
+                    
+                    // Temas de colores aleatorios
+                    const colorThemes = [
+                        { background: "#3498db", text: "#ffffff" },
+                        { background: "#e67e22", text: "#ffffff" },
+                        { background: "#1abc9c", text: "#ffffff" },
+                        { background: "#34495e", text: "#ecf0f1" },
+                        { background: "#8e44ad", text: "#ffffff" },
+                        { background: "#e74c3c", text: "#ffffff" },
+                        { background: "#27ae60", text: "#ffffff" }
+                    ];
+                    
+                    const theme = colorThemes[Math.floor(Math.random() * colorThemes.length)];
+                    
+                    currentSong = {
+                        title: "Tu Canción Personalizada",
+                        lyrics: processedLyrics,
+                        delays: delays,
+                        background_color: theme.background,
+                        text_color: theme.text,
+                        total_duration: currentDelay + 3
+                    };
+                    
+                    setupSongDisplay(currentSong);
+                    successMsg.style.display = 'block';
+                    toggleCustomLyrics();
+                    startSong();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorMsg.textContent = 'Error al procesar tu canción personalizada.';
+                    errorMsg.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '🎵 Crear Mi Canción';
+                    loading.style.display = 'none';
+                }
+            }, 1500);
+        }
+
+        // Función mejorada para canciones aleatorias
+        function generateRandomSong() {
+    const songs = {
+        "motivational": {
+            "title": "Canción Motivacional",
+            "lyrics": [
+                ["Ya sé que los recuerdos no siguen la ley de gravedad", 0.07],
+                ["Que el tiempo pasa y nos convierte en lo que fuimos", 0.07],
+                ["Lo que me aterra comprobar es que la vida va a toda velocidad", 0.07],
+                ["No tiene sentido", 0.07],
+                ["Me duele la verdad", 0.07],
+                ["Que pronto crecimos", 0.07]
+            ],
+            "delays": [0.3, 3.2, 6.5, 10.0, 12.5, 15.0],
+            "background_color": "#2c3e50",
+            "text_color": "#ecf0f1"
+                },
+                "happy_birthday": {
+                    "title": "Feliz Cumpleaños",
+                    "lyrics": [
+                        ["🎵 Happy birthday to you", 0.08],
+                        ["Happy birthday to you", 0.08],
+                        ["Happy birthday Nicolle", 0.09],
+                        ["Happy birthday to you! 🎵", 0.08],
+                        ["🎉 Make a wish!", 0.12],
+                        ["Blow out the candles", 0.10],
+                        ["May all your dreams", 0.08],
+                        ["Come true today! ✨", 0.08]
+                    ],
+                    "delays": [0.5, 4.0, 8.0, 12.5, 17.0, 20.0, 24.0, 28.0],
+                    "background_color": "#e74c3c",
+                    "text_color": "#ffffff"
+                },
+                "celebration": {
+            "title": "Celebración",
+            "lyrics": [
+                ["Alzaré mis ojos a los montes", 0.08],
+                ["Te veré radiante como el sol", 0.08],
+                ["Seguiré el brillo de tu gracia", 0.08],
+                ["Porque sé que Tú sigues siendo Dios", 0.08],
+                ["Tú sigues siendo Diooooos", 0.10]
+            ],
+            "delays": [0.5, 3.5, 7.0, 10.5, 14.0],
+            "background_color": "#9b59b6",
+            "text_color": "#ffffff"
+                },
+                "friendship": {
+            "title": "Amistad",
+            "lyrics": [
+                ["Porque un amigo es una luz", 0.08],
+                ["Brillando en la oscuridad", 0.08],
+                ["Siempre serás mi amigaaa", 0.08],
+                ["No importa nada más", 0.08],
+                ["Porque siempre estarán en mí", 0.09],
+                ["Esos buenos momentos que pasamos sin saber", 0.08]
+            ],
+            "delays": [0.5, 4.0, 8.0, 12.0, 16.0, 19.5],
+            "background_color": "#27ae60",
+            "text_color": "#ffffff"
+                }
+            };
+
+            const btn = document.getElementById('randomSongBtn');
+            const loading = document.getElementById('loadingSong');
+            const successMsg = document.getElementById('successMessageSong');
+            const errorMsg = document.getElementById('errorMessageSong');
+            const songDisplay = document.getElementById('songDisplay');
+            
+            resetSongState();
+            btn.disabled = true;
+            btn.textContent = 'Generando...';
+            loading.style.display = 'block';
+            successMsg.style.display = 'none';
+            errorMsg.style.display = 'none';
+            songDisplay.style.display = 'none';
+            
+            createFloatingNotes();
+            
+            setTimeout(() => {
+                try {
+                    const songKeys = Object.keys(songs);
+                    const randomKey = songKeys[Math.floor(Math.random() * songKeys.length)];
+                    const selectedSong = songs[randomKey];
+                    
+                    currentSong = {
+                        title: selectedSong.title,
+                        lyrics: selectedSong.lyrics,
+                        delays: selectedSong.delays,
+                        background_color: selectedSong.background_color,
+                        text_color: selectedSong.text_color,
+                        total_duration: Math.max(...selectedSong.delays) + 5
+                    };
+                    
+                    setupSongDisplay(currentSong);
+                    successMsg.style.display = 'block';
+                    startSong();
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    errorMsg.textContent = 'Error al generar la canción aleatoria.';
+                    errorMsg.style.display = 'block';
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = '🎲 Otra Canción';
+                    loading.style.display = 'none';
+                }
+            }, 1500);
+        }
+
+        // Eventos de teclado para mejor experiencia
+        document.addEventListener('keydown', function(event) {
+            if (currentSong && document.getElementById('songDisplay').style.display === 'block') {
+                switch(event.code) {
+                    case 'Space':
+                        event.preventDefault();
+                        pauseResumeSong();
+                        break;
+                    case 'KeyR':
+                        event.preventDefault();
+                        restartSong();
+                        break;
+                    case 'Escape':
+                        event.preventDefault();
+                        stopSong();
+                        break;
+                }
+            }
+        });
+
+        // Función para mejorar la experiencia táctil en móviles
+        function addTouchSupport() {
+            const songDisplay = document.getElementById('songDisplay');
+            let touchStartY = 0;
+            let touchEndY = 0;
+            
+            songDisplay.addEventListener('touchstart', function(e) {
+                touchStartY = e.changedTouches[0].screenY;
+            });
+            
+            songDisplay.addEventListener('touchend', function(e) {
+                touchEndY = e.changedTouches[0].screenY;
+                handleSwipe();
+            });
+            
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartY - touchEndY;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        // Swipe up - pausar/reanudar
+                        pauseResumeSong();
+                    } else {
+                        // Swipe down - reiniciar
+                        restartSong();
+                    }
+                }
+            }
+        }
+
+        // Inicializar funciones adicionales cuando la página cargue
+        document.addEventListener('DOMContentLoaded', function() {
+            addTouchSupport();
+            
+            // Agregar placeholder dinámico al textarea
+            const textarea = document.getElementById('customLyricsInput');
+            const placeholders = [
+                "Escribe tu canción especial...\n\nEjemplo:\nEsta es mi canción especial\nLlena de amor y alegría\nCada palabra tiene sentido\nEn este día tan especial",
+                "Crea tu propia melodía...\n\nEjemplo:\nHoy es un día perfecto\nPara cantar y bailar\nLa música nos conecta\nY nos hace volar",
+                "Expresa tus sentimientos...\n\nEjemplo:\nEn cada nota hay vida\nEn cada verso, pasión\nLa música es medicina\nPara el corazón"
+            ];
+            
+            let placeholderIndex = 0;
+            setInterval(() => {
+                if (textarea.value === '') {
+                    textarea.placeholder = placeholders[placeholderIndex];
+                    placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+                }
+            }, 5000);
+        });
+
+        // Función para compartir la canción (simulada)
+        function shareSong() {
+            if (currentSong) {
+                const shareText = `¡Mira esta canción genial: "${currentSong.title}"!`;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        title: currentSong.title,
+                        text: shareText,
+                        url: window.location.href
+                    }).catch(console.error);
+                } else {
+                    // Fallback - copiar al portapapeles
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        alert('¡Enlace copiado al portapapeles!');
+                    }).catch(() => {
+                        alert('No se pudo compartir la canción.');
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+
+
+
+
 </body>
 </html>

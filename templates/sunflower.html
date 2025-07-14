@@ -1,255 +1,730 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌻 Girasol Especial</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            min-height: 100vh;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            color: white;
-        }
-        
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-            to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #FFD700;
-            margin-bottom: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-        }
-        
-        .generate-btn {
-            background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        
-        .generate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        }
-        
-        .generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        #sunflowerImage {
-            max-width: 100%;
-            height: auto;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.5s ease;
-        }
-        
-        #sunflowerImage.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        .loading {
-            display: none;
-            margin: 20px 0;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #FFD700;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .message {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .back-btn:hover {
-            background: white;
-            color: #2a5298;
-            transform: translateY(-2px);
-        }
-        
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-        
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #FFD700;
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); opacity: 0; }
-            50% { transform: translateY(-100px); opacity: 1; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🌻 Una flor especial</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    /* Reset global y estilos body */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: 'Poppins', sans-serif; 
+      min-height:100vh; 
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+      justify-content:flex-start; 
+      background:linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); 
+      padding:20px; 
+      overflow-x: hidden;
+    }
+    
+    /* --- Girasol Section --- */
+    .sun-container { 
+      background:white; 
+      border-radius:20px; 
+      padding:30px; 
+      box-shadow:0 15px 35px rgba(0,0,0,0.2); 
+      max-width:800px; 
+      width:100%; 
+      text-align:center; 
+      margin-bottom:40px; 
+      position:relative; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .generate-btn { 
+      background:linear-gradient(135deg,#FF6B6B,#4ECDC4); 
+      color:white; 
+      border:none; 
+      padding:15px 30px; 
+      font-size:1.2rem; 
+      border-radius:50px; 
+      cursor:pointer; 
+      margin:20px auto; 
+      box-shadow:0 4px 15px rgba(0,0,0,0.2); 
+      transition:all .3s;
+      display: block;
+      width: fit-content;
+    }
+    
+    .generate-btn:hover { transform:translateY(-3px); box-shadow:0 6px 20px rgba(0,0,0,0.3); }
+    .generate-btn:disabled { opacity:.6; cursor:not-allowed; }
+    #sunflowerImage { max-width:100%; height:auto; border-radius:15px; box-shadow:0 10px 25px rgba(0,0,0,0.2); opacity:0; transform:scale(.8); transition:all .5s;}
+    #sunflowerImage.show { opacity:1; transform:scale(1); }
+    .loading { display:none; margin:20px 0; }
+    .spinner { border:4px solid #f3f3f3; border-top:4px solid #FFD700; border-radius:50%; width:50px; height:50px; animation:spin 1s linear infinite; margin:0 auto;}
+    @keyframes spin { 0%{transform:rotate(0deg)}100%{transform:rotate(360deg)} }
+    .message { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:white; padding:20px; border-radius:15px; font-size:1.1rem; line-height:1.6; margin-top:20px; }
+    #sunflowerCount { margin-top:15px; font-size:1rem; color:#FFD700; }
+    .particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:-1; }
+    .particle { position:absolute; width:4px; height:4px; background:#FFD700; border-radius:50%; animation:float 6s ease-in-out infinite; }
+    @keyframes float{0%,100%{transform:translateY(0);opacity:0;}50%{transform:translateY(-100px);opacity:1;}}
+
+    /* --- Carta de Amistad Section --- */
+    .friendship-container { 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      padding: 40px;
+      border-radius: 25px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      max-width: 700px;
+      width: 95%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .friendship-container::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: shimmer 4s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(180deg); }
+    }
+    
+    .floating-elements {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .floating-star {
+      position: absolute;
+      font-size: 20px;
+      color: rgba(255,255,255,0.7);
+      animation: floatStar 3s ease-in-out infinite;
+    }
+    
+    @keyframes floatStar {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    .intro-screen, .friendship-letter {
+      background: rgba(255,255,255,0.95);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      border: 2px solid rgba(255,255,255,0.3);
+      position: relative;
+      z-index: 2;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .star-container {
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .main-star {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      position: relative;
+      margin: 0 auto;
+      animation: starPulse 2s infinite;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+    
+    @keyframes starPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.1) rotate(180deg); }
+    }
+    
+    .year-badge {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .sparkles {
+      color: #FFD700;
+      font-size: 14px;
+      margin-bottom: 15px;
+      animation: sparkle 2s infinite;
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    
+    .intro-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 28px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 25px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .date-input {
+      width: 100%;
+      max-width: 300px;
+      padding: 15px 20px;
+      border: 3px solid #667eea;
+      border-radius: 30px;
+      font-size: 16px;
+      text-align: center;
+      margin: 20px auto;
+      transition: all 0.3s ease;
+      outline: none;
+      background: rgba(255,255,255,0.9);
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .date-input:focus {
+      border-color: #f093fb;
+      box-shadow: 0 0 20px rgba(240,147,251,0.4);
+      transform: scale(1.05);
+    }
+    
+    .open-btn {
+      background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      border-radius: 30px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+      margin: 20px auto;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .open-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .open-btn:hover::before {
+      left: 100%;
+    }
+    
+    .open-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(102,126,234,0.4);
+    }
+    
+    .error-message {
+      color: #FF6B6B;
+      font-size: 14px;
+      margin-top: 15px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      background: rgba(255,107,107,0.1);
+      padding: 10px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,107,107,0.3);
+    }
+    
+    .error-message.show { opacity: 1; }
+    
+    .friendship-letter {
+      display: none;
+      animation: slideIn 0.8s ease;
+      border: 3px solid #667eea;
+      text-align: left;
+      padding: 50px;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(50px) scale(0.9); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    
+    .letter-sparkles {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      color: #FFD700;
+      font-size: 18px;
+      animation: sparkle 2s infinite;
+    }
+    
+    .letter-sparkles.right {
+      left: auto;
+      right: 25px;
+      animation-delay: 1s;
+    }
+    
+    .letter-title {
+      font-family: 'Dancing Script', cursive;
+      color: #667eea;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    
+    .letter-content {
+      display: flex;
+      gap: 30px;
+      align-items: flex-start;
+    }
+    
+    .letter-text {
+      flex: 1;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.8;
+      text-align: justify;
+      font-weight: 400;
+    }
+    
+    .qr-container {
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      border-radius: 15px;
+      position: relative;
+      cursor: pointer;
+      margin: 0 auto;
+      transition: transform 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .qr-container:hover {
+      transform: scale(1.05);
+    }
+    
+    .scratch-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, #C0C0C0, #E8E8E8, #C0C0C0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      transition: all 0.5s ease;
+      padding: 15px;
+      text-align: center;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .scratch-overlay::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+      transition: left 0.8s;
+    }
+    
+    .scratch-overlay:hover::before {
+      left: 100%;
+    }
+    
+    .scratch-overlay.scratching {
+      animation: scratchEffect 0.8s ease-out;
+    }
+    
+    @keyframes scratchEffect {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; transform: scale(1.1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+    
+    .qr-code {
+      width: 120px;
+      height: 120px;
+      background: white;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      position: absolute;
+      inset: 15px;
+      opacity: 0;
+      transition: all 0.5s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    
+    .qr-code.revealed {
+      opacity: 1;
+      animation: revealQR 0.6s ease;
+    }
+    
+    @keyframes revealQR {
+      0% { transform: scale(0.5) rotate(180deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    .qr-pattern {
+      width: 100px;
+      height: 100px;
+      background: #000;
+      position: relative;
+      border-radius: 5px;
+    }
+    
+    .qr-pattern::after {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 40px;
+      background: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      content: '♪';
+    }
+    
+    .signature {
+      text-align: center;
+      margin-top: 40px;
+      color: #667eea;
+      font-style: italic;
+      font-weight: 600;
+      font-size: 18px;
+      font-family: 'Dancing Script', cursive;
+    }
+    
+    .back-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(102,126,234,0.1);
+      border: 2px solid #667eea;
+      font-size: 20px;
+      cursor: pointer;
+      color: #667eea;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      font-weight: bold;
+    }
+    
+    .back-btn:hover {
+      background: #667eea;
+      color: white;
+      transform: scale(1.1);
+    }
+    
+    /* Responsive design */
+    @media (max-width: 768px) {
+      .friendship-container {
+        max-width: 95%;
+        padding: 20px;
+      }
+      
+      .intro-screen, .friendship-letter {
+        padding: 30px 20px;
+      }
+      
+      .letter-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .qr-container {
+        width: 120px;
+        height: 120px;
+        margin: 20px auto;
+      }
+      
+      .intro-text {
+        font-size: 24px;
+      }
+      
+      .letter-title {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    
-    <a href="/" class="back-btn">← Volver al Inicio</a>
-    
-    <div class="header">
-        <h1>🌻 Girasol Especial 🌻</h1>
-        <p class="subtitle">Un regalo único creado con amor matemático</p>
-        <p id="sunflowerCount" style="margin-top: 15px; font-size: 1rem; color: #FFD700;"></p>
+
+  <!-- Partículas doradas para girasol -->
+  <div class="particles" id="particles"></div>
+
+  <!-- SECCIÓN GIRASOL -->
+  <div class="sun-container">
+    <h1 style="color:#2a5298; margin-bottom:10px;">🌻 Girasol Especial 🌻</h1>
+    <p style="color:#555; margin-bottom:20px;">Un regalo único creado con amor matemático</p>
+    <button class="generate-btn" onclick="generateSunflower()" id="generateBtn">
+      ✨ Crear Mi Girasol ✨
+    </button>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Cultivando tu girasol especial...</p>
     </div>
+    <img id="sunflowerImage" alt="Girasol Especial">
+    <p id="sunflowerCount"></p>
+    <div class="message">
+      <h3>💖 Motivo Especial 💖</h3>
+      <p>Estos girasoles han sido creados especialmente para ti usando la belleza de las matemáticas. 
+      Cada semilla está posicionada siguiendo la secuencia de Fibonacci y el ángulo dorado, 
+      creando la espiral perfecta que vemos en la naturaleza. En este dia tan especial, te mereces todas las flores del mundo.</p>
+      <p><strong>Y asi como los girasoles que siempre buscan la luz del sol, 
+      espero que en tu vida siempre encuentres la felicidad y puedas disfrutar
+      de muchos dias soleados en tu vida. ¡Feliz Cumpleaños! 🎉</strong></p>
+    </div>
+  </div>
+
+  <!-- SECCIÓN CARTA DE AMISTAD -->
+  <div class="friendship-container">
+    <div class="floating-elements" id="floatingElements"></div>
     
-    <div class="container">
-        <button class="generate-btn" onclick="generateSunflower()" id="generateBtn">
-            ✨ Crear Mi Girasol ✨
-        </button>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Cultivando tu girasol especial...</p>
+    <div class="intro-screen" id="introScreen">
+      <div class="star-container">
+        <div class="main-star">
+          <div class="year-badge">2025</div>
+        </div>
+      </div>
+      
+      <div class="sparkles">✨ ★ ✨ ★ ✨</div>
+      
+      <div class="intro-text">Introduce tu fecha especial...</div>
+      
+      <input type="date" class="date-input" id="dateInput" placeholder="Selecciona una fecha">
+      
+      <button class="open-btn" id="openBtn">Descubrir Sorpresa</button>
+      
+      <div class="error-message" id="errorMessage">... fecha de cumple este año pls ajaja</div>
+    </div>
+
+    <div class="friendship-letter" id="friendshipLetter">
+      <button class="back-btn" id="backBtn">←</button>
+      
+      <div class="letter-sparkles">✨</div>
+      <div class="letter-sparkles right">✨</div>
+      
+      <h2 class="letter-title">Querida Amiga,</h2>
+      
+      <div class="letter-content">
+        <div class="letter-text">
+          ¡Cuánto tiempo hemos compartido juntos! Considero que cada momento ha sido un tesoro. 
+          Nuestra amistad es como una estrella que brilla en los momentos más oscuros, 
+          y es como el sol que nos da energía y siempre brilla para seguir adelante. 
+          
+          Gracias por ser esa persona especial que siempre está ahí, 
+          por las risas compartidas, los consejos sinceros y por hacer que cada día sea más brillante que ayer. 
+          
+          ¡Esta pequeña sorpresa es para celebrar tu cumple y nuestra hermosa amistad!
         </div>
         
-        <img id="sunflowerImage" alt="Girasol Especial" style="display: none;">
-        
-        <div class="message">
-            <h3>💖 Motivo Especial 💖</h3>
-            <p>Estos girasoles han sido creados especialmente para ti usando la belleza de las matemáticas. 
-            Cada semilla está posicionada siguiendo la secuencia de Fibonacci y el ángulo dorado, 
-            creando la espiral perfecta que vemos en la naturaleza. En este dia tan especial, te mereces todas las flores del mundo.</p>
-            <p><strong>Y asi como este girasol siempre busca la luz del sol, 
-            espero que en tu vida siempre encuentres la felicidad y puedas disfrutar
-            de muchos dias soleados en tu vida. ¡Feliz Cumpleaños! 🎉</strong></p>
+        <div class="qr-container" id="qrContainer">
+          <div class="scratch-overlay" id="scratchOverlay">
+            ¡Toca aquí para revelar tu sorpresa musical! 🎵
+          </div>
+          <div class="qr-code" id="qrCode">
+            <div class="qr-pattern"></div>
+          </div>
         </div>
+      </div>
+      
+      <div class="signature">✨ Con cariño y amistad eterna ✨</div>
     </div>
+  </div>
 
-    <script>
-        // Crear partículas flotantes
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                container.appendChild(particle);
-            }
-        }
-        
-        function generateSunflower() {
-        const btn = document.getElementById('generateBtn');
-        const loading = document.getElementById('loading');
-        const image = document.getElementById('sunflowerImage');
-        const countText = document.getElementById('sunflowerCount');
-
-        // Mostrar carga
-        btn.disabled = true;
-        loading.style.display = 'block';
-        image.style.display = 'none';
-        image.classList.remove('show');
-
-        fetch('/generate_sunflower')
-            .then(response => response.json())
-            .then(data => {
-                loading.style.display = 'none';
-                image.src = data.image_url;
-                image.style.display = 'block';
-                setTimeout(() => image.classList.add('show'), 100);
-                btn.disabled = false;
-                btn.textContent = '🌻 Cultivar Otro Girasol 🌻';
-                countText.textContent = `🌻 Girasoles generados: ${data.count}`;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                loading.style.display = 'none';
-                btn.disabled = false;
-                alert('Perdon, ocurrió un error al crear el girasol. Intenta nuevamente.');
-            });
+  <!-- Scripts -->
+  <script>
+    // ---- Partículas Doradas ----
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 6 + 's';
+        p.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        container.appendChild(p);
+      }
     }
 
-    createParticles();
-    </script>
+    // ---- Elementos flotantes ----
+    function createFloatingElements() {
+      const container = document.getElementById('floatingElements');
+      const symbols = ['✨', '⭐', '🌟', '💫', '✨'];
+      
+      for (let i = 0; i < 15; i++) {
+        const element = document.createElement('div');
+        element.className = 'floating-star';
+        element.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        element.style.left = Math.random() * 100 + '%';
+        element.style.top = Math.random() * 100 + '%';
+        element.style.animationDelay = Math.random() * 3 + 's';
+        element.style.animationDuration = (Math.random() * 2 + 2) + 's';
+        container.appendChild(element);
+      }
+    }
+
+    // ---- Generador de Girasol (llama a backend) ----
+    function generateSunflower() {
+      const btn = document.getElementById('generateBtn');
+      const loading = document.getElementById('loading');
+      const img = document.getElementById('sunflowerImage');
+      const cnt = document.getElementById('sunflowerCount');
+      
+      btn.disabled = true;
+      loading.style.display = 'block';
+      img.style.display = 'none';
+      img.classList.remove('show');
+      
+      fetch('/generate_sunflower')
+        .then(r => r.json())
+        .then(d => {
+          loading.style.display = 'none';
+          img.src = d.image_url;
+          img.style.display = 'block';
+          setTimeout(() => img.classList.add('show'), 100);
+          btn.disabled = false;
+          btn.textContent = '🌻 Cultivar Otro Girasol 🌻';
+          cnt.textContent = `🌻 Girasoles generados: ${d.count}`;
+        })
+        .catch(e => {
+          console.error(e);
+          loading.style.display = 'none';
+          btn.disabled = false;
+          alert('Hubo un error creando el girasol.');
+        });
+    }
+
+    // ---- Carta de Amistad Interactiva ----
+    const introScreen = document.getElementById('introScreen');
+    const friendshipLetter = document.getElementById('friendshipLetter');
+    const dateInput = document.getElementById('dateInput');
+    const openBtn = document.getElementById('openBtn');
+    const backBtn = document.getElementById('backBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const qrContainer = document.getElementById('qrContainer');
+    const scratchOverlay = document.getElementById('scratchOverlay');
+    const qrCode = document.getElementById('qrCode');
+    const specialDate = '2025-09-21';
+
+    function showError(msg) {
+      errorMessage.textContent = msg;
+      errorMessage.classList.add('show');
+      setTimeout(() => errorMessage.classList.remove('show'), 3000);
+    }
+
+    function openLetter() {
+      if (!dateInput.value) return showError('Por favor, selecciona una fecha');
+      if (dateInput.value !== specialDate) return showError('... fecha de cumple este año pls ajaja 😉');
+      
+      introScreen.style.display = 'none';
+      friendshipLetter.style.display = 'block';
+    }
+
+    function goBack() {
+      friendshipLetter.style.display = 'none';
+      introScreen.style.display = 'block';
+      scratchOverlay.style.opacity = '1';
+      scratchOverlay.classList.remove('scratching');
+      qrCode.classList.remove('revealed');
+    }
+
+    function scratchEffect() {
+      scratchOverlay.classList.add('scratching');
+      
+      setTimeout(() => {
+        scratchOverlay.style.opacity = '0';
+        qrCode.classList.add('revealed');
+        createSparkles();
+      }, 400);
+      
+      setTimeout(() => {
+        if (confirm('¿Quieres escuchar una canción especial? 🎵')) {
+          window.open('https://www.youtube.com/watch?v=q-2VamdNzJ8', '_blank');
+        }
+      }, 1200);
+    }
+
+    function createSparkles() {
+      for (let i = 0; i < 15; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.textContent = '✨';
+        sparkle.style.position = 'absolute';
+        sparkle.style.color = '#FFD700';
+        sparkle.style.fontSize = '20px';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = '100%';
+        sparkle.style.pointerEvents = 'none';
+        sparkle.style.zIndex = '1000';
+        sparkle.style.animation = 'floatUp 3s ease-out forwards';
+        sparkle.style.animationDelay = (i * 0.1) + 's';
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 3000);
+      }
+    }
+
+    // Agregar animación de flotación
+    const styleAnimation = document.createElement('style');
+    styleAnimation.textContent = `
+      @keyframes floatUp {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(-150vh) rotate(360deg); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(styleAnimation);
+
+    // Event listeners
+    openBtn.addEventListener('click', openLetter);
+    backBtn.addEventListener('click', goBack);
+    qrContainer.addEventListener('click', scratchEffect);
+    dateInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') openLetter();
+    });
+
+    // Inicialización
+    window.addEventListener('load', () => {
+      createParticles();
+      createFloatingElements();
+      dateInput.setAttribute('min', '2020-01-01');
+      dateInput.setAttribute('max', '2025-12-31');
+    });
+  </script>
 </body>
 </html>
